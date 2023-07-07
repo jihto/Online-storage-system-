@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+body{
+    background-image: linear-gradient(to top right, rgb(0, 238, 255), rgb(255, 255, 255));
+    background-repeat: no-repeat;
+    background-size: cover; 
+    overflow: hidden;
+} 
+
+.item-bg-1{
+    background-image: linear-gradient(to bottom right, rgb(0, 238, 255), rgb(255, 255, 255)); 
+}
+.item-bg-2{
+    background-image: linear-gradient(to bottom right, rgb(181, 183, 241), rgb(63, 110, 210)); 
+}
+ 
+.my-checkbox > input:checked + .my-checkbox > div::before {
+    transform: translateX(26px);
+}
+
+@layer utilities{ 
+    .text-shadow {
+        text-shadow: theme('textShadow.large');
+    }
+    .scrollbar::-webkit-scrollbar {
+    width: 1px;
+    height: 1px;
+    }
+
+.scrollbar::-webkit-scrollbar-track {
+    border-radius: 100vh;
+    background: #f6f7ed;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+    background: #28d2e9;
+    border-radius: 100vh;
+    border: 2px solid #f6f7ed;
+}
+
+.scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #28d2e9;
+}
+} 

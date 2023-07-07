@@ -1,0 +1,41 @@
+{
+  "name": "client",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@types/node": "18.15.10",
+    "@types/react": "18.0.30",
+    "@types/react-dom": "18.0.11",
+    "axios": "^1.4.0",
+    "dateformat": "^5.0.3",
+    "dotenv": "^16.0.3",
+    "eslint": "8.36.0",
+    "eslint-config-next": "13.2.4",
+    "js-cookie": "^3.0.5",
+    "next": "^13.2.4",
+    "next-auth": "^4.22.1",
+    "nookies": "^2.5.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.43.9",
+    "react-hot-toast": "^2.4.1",
+    "react-icons": "^4.8.0",
+    "react-query": "^3.39.3",
+    "typescript": "5.0.2",
+    "xlsx": "^0.18.5",
+    "zustand": "^4.3.8"
+  },
+  "devDependencies": {
+    "@types/dateformat": "^5.0.0",
+    "@types/js-cookie": "^3.0.3",
+    "autoprefixer": "^10.4.14",
+    "postcss": "^8.4.21",
+    "tailwindcss": "^3.3.0"
+  }
+}
