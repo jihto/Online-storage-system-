@@ -1,5 +1,4 @@
-import { Transform, Type } from "class-transformer";
-import { IsEmail, IsNotEmpty, IsOptional, IsString, ValidateIf, ValidateNested } from "class-validator"; 
+import { IsEmail, IsNotEmpty, IsOptional, IsString, ValidateIf } from "class-validator"; 
 import { PartialType } from "@nestjs/mapped-types";
 
 export class SignInDto{

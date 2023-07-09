@@ -4,14 +4,14 @@ import { Model } from 'mongoose';
 import { HttpStatus, HttpException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt'; 
 import { ForbiddenException, NotAcceptableException } from "@nestjs/common/exceptions";
-import { JwtService } from '@nestjs/jwt';
-import { jwtConstants } from "./constants";
+import { JwtService } from '@nestjs/jwt'; 
 import { Tokens } from "./types/token.type";
 import { IAuth } from "./models/auth.model";
 import { IUser } from "../users/users.model";
 import { DataSignInDto, DataSignUpDto } from "./dtos/data-user.dto";
 import { MailService } from "src/mail/mail.service"; 
 import { Response } from "express";
+import { ConfigService } from '@nestjs/config';
 
 @Injectable({})
 export class AuthService { 
@@ -22,16 +22,17 @@ export class AuthService {
         private jwtService: JwtService,
     ) {} 
         
+    private config: ConfigService;
     private opt: number;
     private async getTokenAndRefresh(payload: Object): Promise<Tokens>{
         const [accessToken, refreshToken] = await Promise.all([
             this.jwtService.signAsync(payload,{
-                    secret: jwtConstants.secret,
+                    secret: this.config.get('SECRET_KEY'),
                     expiresIn: "30m"
                 } 
             ),
             this.jwtService.signAsync(payload,{
-                    secret: jwtConstants.secret,
+                    secret: this.config.get('SECRET_KEY'),
                     expiresIn: "1h"
                 } 
             )
@@ -64,8 +65,7 @@ export class AuthService {
         } catch (error) {
             throw new NotAcceptableException(error.message);
         }
-    } 
-
+    }
 
     async signin(user: DataSignUpDto): Promise<DataSignInDto>{   
         try {   
@@ -121,7 +121,7 @@ export class AuthService {
     async refreshToken(data: any): Promise<Tokens>{
         try {   
             const checkUser = await this.userModel.findOne({ _id: data._id}); 
-            const checkToken = await this.jwtService.verify(jwtConstants.secret, data.refreshToken);
+            const checkToken = await this.jwtService.verify(this.config.get('SECRET_KEY'), data.refreshToken);
             if(!checkToken || ! checkUser)
                 throw new ForbiddenException('Access Denied');
             const { accessToken, refreshToken } = await this.getTokenAndRefresh({name: data.name, sub: data._id});
@@ -140,9 +140,9 @@ export class AuthService {
             const isExists = await this.authModel.findOne({ email });
             if(!isExists)
                 throw new HttpException('Email wasn\'t exists', HttpStatus.BAD_REQUEST);
-            // const isToken = await this.jwtService.verify(jwtConstants.secret, token);
-            // if(!isToken)
-            //     throw new HttpException('Token wasn\'t exists', HttpStatus.BAD_REQUEST);
+            const isToken = await this.jwtService.verify(this.config.get('SECRET_KEY'), token);
+            if(!isToken)
+                throw new HttpException('Token wasn\'t exists', HttpStatus.BAD_REQUEST);
             console.log({"otp":this.generateOTP()});
             // await this.mailService.sendUserConfirmation(email, "tokenn");
             res.status(HttpStatus.OK).send('Send email successful');

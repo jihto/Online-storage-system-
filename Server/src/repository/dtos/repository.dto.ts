@@ -4,7 +4,7 @@ import { IUser } from "src/users/users.model";
 import { Exclude, Type } from "class-transformer"; 
 import { IFolder } from "src/folder/folder.model";
 
-export class ReposResponseDto{
+export class RepositoryDto{
     @IsNotEmpty()
     @Type(() => String)
     _id: Types.ObjectId;
@@ -34,15 +34,14 @@ export class ReposResponseDto{
     @Exclude()
     __v: number;
 
-    constructor(partial: Partial<ReposResponseDto>){
+    constructor(partial: Partial<RepositoryDto>){
         Object.assign(this, partial);
     }
 }
 
-export class CreateReposDto{ 
+export class CreateRepositoryDto{ 
     @IsOptional()
     @IsString() 
     idFolder?: string;
- 
+
 }
- 

@@ -1,10 +1,9 @@
 import { Exclude, Transform, Type } from "class-transformer";
 import { IsBoolean, IsNotEmpty, IsOptional, IsString } from "class-validator";
-import mongoose, { Types } from "mongoose";
+import { ObjectId, Types } from "mongoose";
 import { IUser } from "src/users/users.model"; 
 import { IFolder } from "../folder.model";
-import { IFile } from "src/repository/repository.model";
-import { ReposResponseDto } from "src/repository/dtos/repository.dto";
+import { IFile } from "src/repository/repository.model"; 
 
 
 export class FolderDto {
@@ -57,10 +56,21 @@ export class CreateFolderDto{
     parent?: string;
 }
 
-export class UpdateFolder{
+export class UpdateFolderDto{
+    @IsNotEmpty()
+    @IsString()
     name: string;
 
-    files: Array<string>;
+    @IsOptional()
+    @IsString()
+    color?: string; 
+}
 
-    
+export class MoveFolderDto{
+    @IsNotEmpty()
+    @Type(() => String)
+    currentFolder: ObjectId;
+
+    @Type(() => String)
+    newFolder?: ObjectId;
 }

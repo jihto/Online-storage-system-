@@ -4,25 +4,14 @@ import multer from 'multer';
 import { InformationUser } from 'src/users/dtos/informationUser.dto';
 import { UsersService } from 'src/users/services/users/users.service';
 
-export const storageAvatar = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, './uploads/avatars')
-    },
-    filename: function (req, file, cb) {
-        const filename = file.originalname;
-        const fileExtension = filename.split(".")[1];
-        cb(null, Date.now() + "." + fileExtension);
-    }
-})
-
 @Controller('users')
 export class UsersController {
     constructor(private usersService: UsersService){}
     @Get()
-    informationUser(@Request() req):Promise<InformationUser> { 
-        return this.usersService.informationUser(req.user);
+    informationUser(@Request() request):Promise<InformationUser> { 
+        return this.usersService.informationUser(request.user);
     }
- 
+
     @Put('updateAvatar') 
     @UseInterceptors(FileInterceptor('avatar'))
     changeAvatar(
@@ -34,16 +23,16 @@ export class UsersController {
                 ],
             }), 
         ) avatar: Express.Multer.File,
-        @Request() req,
+        @Request() request,
     ): Promise<HttpException>{
-        return this.usersService.ChangeAvatar(req.user._id, avatar);
+        return this.usersService.changeAvatar(request.user._id, avatar);
     }
 
     @Put('updateInformation')
     updateInformationUser( 
-        @Body() { username },
-        @Request() req,
-    ): Promise<HttpException>{
-        return this.usersService.updateInformationUser(req.user._id, username);
+        @Body('username') username: string,
+        @Request() request,
+    ): Promise<HttpException>{ 
+        return this.usersService.updateInformationUser(request.user._id, username);
     }
 }

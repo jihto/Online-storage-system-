@@ -5,7 +5,7 @@ import { IFolderModel } from 'src/folder/folder.model';
 import { IFileModel } from 'src/repository/repository.model';
 import { InformationUser } from 'src/users/dtos/informationUser.dto';
 import { IUser } from 'src/users/users.model';
-import { UserDto } from 'src/users/dtos/user.dto';
+import { ResponseUserDto } from 'src/users/dtos/responseUser.dto';
 
 @Injectable()
 export class UsersService {
@@ -14,7 +14,7 @@ export class UsersService {
         @InjectModel('User') private readonly userModel: Model<IUser>,
         @InjectModel('Folder') private readonly folderModel: IFolderModel, 
     ){}
-    async informationUser(user: UserDto): Promise<InformationUser>{
+    async informationUser(user: ResponseUserDto): Promise<InformationUser>{
         try{
             const userQuery = await this.userModel
                 .findOne({ _id:user._id })
@@ -31,7 +31,7 @@ export class UsersService {
             throw new NotAcceptableException(error.message); 
         }
     }
-    async ChangeAvatar(
+    async changeAvatar(
         _id: string,
         avatar: Express.Multer.File, 
     ): Promise<HttpException>{
@@ -50,11 +50,11 @@ export class UsersService {
     async updateInformationUser(
         _id: string, 
         username: string,
-    ): Promise<HttpException>{
+    ): Promise<HttpException>{ 
         try { 
             const updateInfo = await this.userModel.findOneAndUpdate(
                 { _id }, 
-                { $set: {  username}}
+                { $set: { username }}     
             );
             if(!updateInfo)
                 throw new HttpException("Id was not exists", HttpStatus.BAD_REQUEST);

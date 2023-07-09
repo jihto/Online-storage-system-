@@ -7,7 +7,7 @@ import { IFile } from 'src/repository/repository.model';
 const FolderSchema = new mongoose.Schema({
     _id: { type: mongoose.Schema.Types.ObjectId, required: true, },
     name: { type: String, require: true, maxLength: 50 },
-    color: { type: String, require:false, default: "white" },
+    color: { type: String, require: false, default: "white" },
     parent: { type: mongoose.Schema.Types.ObjectId, ref: 'Folder' },
     kids: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Folder' }],
     files: [{ type: mongoose.Schema.Types.ObjectId, ref: 'File' }],

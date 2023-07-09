@@ -7,17 +7,14 @@ import { RepositoryModule } from './repository/repository.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { FolderModule } from './folder/folder.module';
 import { MailModule } from './mail/mail.module';
-import { ConfigModule } from '@nestjs/config';
-import { UserModule } from './user/user.module';
-import { UsersService } from './users/services/users/users.service';
-import { UsersController } from './users/controllers/users/users.controller';
+import { ConfigModule } from '@nestjs/config';  
 import { UsersModule } from './users/users.module';
 
 
 @Module({
   imports: [
-    AuthModule, 
-    UserModule,
+    AuthModule,  
+    UsersModule,
     FolderModule,
     RepositoryModule,
     MongooseModule.forRoot(
@@ -27,23 +24,21 @@ import { UsersModule } from './users/users.module';
     MailModule,
     ConfigModule.forRoot({
       isGlobal: true,
-    }),
-    UsersModule
+    }), 
   ], 
   providers:[
     {
       provide: APP_INTERCEPTOR,
       useClass: ClassSerializerInterceptor, 
-    },
-    UsersService, 
-  ], controllers: [UsersController]
+    }, 
+  ]
 })
 export class AppModule implements NestModule
 {
     configure(consumer: MiddlewareConsumer) {
         consumer
             .apply(AuthMiddleware)
-            .forRoutes("repository", "folder", "user"); //applies middleware to all routes
+            .forRoutes("repository", "folder", "users"); //applies middleware to all routes
         // consumer
         //     .apply()
         //     .forRoutes('*'); // applies JWT authentication middleware to all routes

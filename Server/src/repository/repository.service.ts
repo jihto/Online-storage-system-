@@ -1,13 +1,13 @@
 import { HttpException, HttpStatus, Injectable, NotAcceptableException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import {  HydratedDocument, Model, SortOrder } from "mongoose";
+import {  HydratedDocument, Model, ObjectId, SortOrder } from "mongoose";
 import { IUser } from "src/users/users.model";
-import { ReposResponseDto } from "./dtos/repository.dto";
+import { RepositoryDto } from "./dtos/repository.dto";
 import { IFileModel } from "./repository.model";
 import * as fs from 'fs';
-import { ParseObjectIdPipe } from "./objectId.pipe";
+import { ParseObjectIdPipe } from "./pipes/objectId.pipe";
 import { IFolderModel } from "src/folder/folder.model";
-import { SortType,SortValue } from "./dtos/sort.enum";
+import { SortType,SortValue } from "./pipes/sort.enum";
 
 
 
@@ -19,118 +19,107 @@ export class RepositoryService {
         @InjectModel('Folder') private readonly folderModel: IFolderModel, 
     ) {} 
 
-    private async checkIdFileExists(fileId){
+    private async checkIdFileExists(fileId: ObjectId){
         const checkExists = await this.fileModel.exists({ _id: fileId});
         if(!checkExists)
             throw new HttpException('Id file wasn\'t exists', HttpStatus.BAD_REQUEST);
     }
-    private async checkIdUserExists(userId){
+    private async checkIdUserExists(userId: ObjectId){
         const checkExists = await this.userModel.exists({ _id: userId});
         if(!checkExists)
             throw new HttpException('Id user wasn\'t exists', HttpStatus.BAD_REQUEST);
-    }
-    private async findOrNot(data){
-        if(!data)
-            throw new HttpException('Couldn\'t find', HttpStatus.FORBIDDEN);
-    }  
+    } 
 
-    async filesOfUser(userId: ParseObjectIdPipe, type: SortType, value: SortOrder){  
-        try {
-            await this.checkIdUserExists(userId);
-            const files = await this.fileModel
-                .find({ user: userId, isDeleted: false }) // { skip:0, //StartRow , limit:10 //EndRow , sort:{ 'createAt': -1 } //Sort by Date Added DESC
-                .sort([[type, value]])
-                .lean()
-                .exec();
-            await this.findOrNot(files);
-            return files.map(file => new ReposResponseDto(file));
-        } catch (error) {
-            throw new NotAcceptableException(error.message);
-        } 
+    private async notFound(data: any, errorMessage: string){
+        if(!data)
+            throw new NotAcceptableException(errorMessage);
     }
 
     async searchFilesOfUser(
-        userId: ParseObjectIdPipe, 
+        userId: ObjectId, 
         type: SortType, 
         value: SortOrder, 
         search: string
-    ) :Promise<ReposResponseDto[]>{ 
-        await this.checkIdUserExists(userId); 
-        const searchFiles = await this.fileModel
-            .find({
-                user: userId, 
-                isDeleted: false, 
-                originalname: {
-                    $regex: search
-                }
-            })
-            .sort([[type, value]])
-            .lean();  
-        await this.findOrNot(searchFiles);
-        return searchFiles.map(file => new ReposResponseDto(file));
+    ) :Promise<RepositoryDto[]>{ 
+        try{
+            await this.checkIdUserExists(userId); 
+            const searchFiles = await this.fileModel
+                .find({
+                    user: userId, 
+                    isDeleted: false, 
+                    originalname: {
+                        $regex: search
+                    }
+                })
+                .sort([[type, value]])
+                .lean();  
+            if(!searchFiles)
+                return [];
+            return searchFiles.map(file => new RepositoryDto(file));
+        }catch(error: any){
+            throw new NotAcceptableException(error.message);
+        }
+        
     }
 
     async favoriteFile(
-        _id: string
+        _id: ObjectId
     ): Promise<HttpException>{
         try{
             await this.checkIdFileExists(_id);
             const favorite = await this.fileModel.findOneAndUpdate({_id}, { $set: { isFavorite: true } })
-            if(!favorite)
-                throw new NotAcceptableException('Something wrong in update');
+            await this.notFound(favorite, 'Something wrong in update')
             return new HttpException('Favorite Successfull', HttpStatus.OK);
         }catch(error){
             throw new NotAcceptableException(error.message);
         }
     }
 
-    async UnFavoriteFile(
-        _id: string
-    ): Promise<HttpException>{
+    async unFavoriteFile( _id: ObjectId ): Promise<HttpException>{
         try{
             await this.checkIdFileExists(_id);
             const favorite = await this.fileModel.findOneAndUpdate({_id}, { $set: { isFavorite: false } })
-            if(!favorite)
-                throw new NotAcceptableException('Something wrong in update');
+            await this.notFound(favorite, 'Something wrong in update');
             return new HttpException('UnFavorite Successfull', HttpStatus.OK);
         }catch(error){
             throw new NotAcceptableException(error.message);
         }
     }
 
-    async favoritesFileOfUser(idUser: string):Promise<ReposResponseDto[]>{
+    async favoritesFileOfUser(idUser: ObjectId):Promise<RepositoryDto[]>{
         try {
             await this.checkIdUserExists(idUser);
             console.log({ user: idUser, isFavorite: true })
             const favoriteFiles = await this.fileModel.find({ user: idUser, isFavorite: true }).lean();
-            if(!favoriteFiles)
-                throw new NotAcceptableException('Something wrong in Find');
-            return favoriteFiles.map(file => new ReposResponseDto(file));
+            await this.notFound(favoriteFiles, 'Something wrong in Find');
+            return favoriteFiles.map(file => new RepositoryDto(file));
         } catch (error) {
             throw new NotAcceptableException(error.message);
         }
     }
 
 
-    async filesDeletedOfUser(userId: ParseObjectIdPipe): Promise<ReposResponseDto[]>{
+    async filesDeletedOfUser(userId: ObjectId): Promise<RepositoryDto[]>{
         try { 
             await this.checkIdUserExists(userId);
             const filesDeleted = await this.fileModel
                 .find({ user: userId, isDeleted: true })
                 .lean()
                 .exec();
-            await this.findOrNot(filesDeleted);
-            return filesDeleted.map(file => new ReposResponseDto(file));
+            if(!filesDeleted)
+                return [];
+            return filesDeleted.map(file => new RepositoryDto(file));
         } catch (error) {
             throw new NotAcceptableException(error.message);
         }
     } 
 
-    async file(_id: string): Promise<ReposResponseDto>{
+    async file(_id: ObjectId): Promise<RepositoryDto>{
         try {  
             const file = await this.fileModel.findOne({ _id, isDeleted: false });
+            await this.notFound(file, 'Something wrong get file')
             const fileData = file.toObject();
-            return new ReposResponseDto(fileData);
+            return new RepositoryDto(fileData);
         } catch (error) {
             throw new NotAcceptableException(error.message);
         }
@@ -169,7 +158,7 @@ export class RepositoryService {
         } 
     }
 
-    async updateFile(file: Express.Multer.File, _id: string, title: string, description: string ) {
+    async updateFile(file: Express.Multer.File, _id: ObjectId, title: string, description: string ) {
         try { 
             // Check Id was exists or not
             await this.checkIdFileExists(_id);             
@@ -182,13 +171,13 @@ export class RepositoryService {
                 }
             } 
             const updateFile = await this.fileModel.findOneAndUpdate({_id }, update);
-            return new ReposResponseDto(updateFile);
+            return new RepositoryDto(updateFile);
         } catch (error) {
             throw new NotAcceptableException(error.message);
         } 
     }
 
-    async deleteFile(_id: string): Promise<HttpException>{
+    async deleteFile(_id: ObjectId): Promise<HttpException>{
         try { 
             await this.checkIdFileExists(_id); // Check Id was exists or not 
             await this.fileModel.softDelete({_id}); 
@@ -198,7 +187,7 @@ export class RepositoryService {
         } 
     }
 
-    async restore(_id: string): Promise<HttpException>{
+    async restore(_id: ObjectId): Promise<HttpException>{
         try { 
             await this.checkIdFileExists(_id);
             await this.fileModel.restore({_id});

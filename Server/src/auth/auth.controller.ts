@@ -8,6 +8,7 @@ import { DataSignInDto, DataSignUpDto } from "./dtos/data-user.dto";
 import { LocalAuthGuard, RolesGuard, VerifyTokenAuthGuard } from "./guards";
 import { Role } from "./models/roles.enum"; 
 import { Roles } from "./roles.decorater";
+import { ParseEmailPipe } from "./pipes/email.pipe";
 
 
 @Controller('auth')  
@@ -16,7 +17,7 @@ export class AuthController{
     //URL POST /auth/signin 
     @UseGuards(LocalAuthGuard) //Call the fuction LocalAuthGuard with custom AuthGuard('local') of passport
     @Post('signin')
-    signin( @Request() req): Promise<DataSignInDto>{
+    signin( @Request() req: any): Promise<DataSignInDto>{
         return this.authService.signin(req.user);
     }
 
@@ -30,20 +31,20 @@ export class AuthController{
     @UseGuards(AuthGuard('jwt'))
     @Roles(Role.USER)
     @Get() 
-    getAllUser(@Request() req): string{   
+    getAllUser(@Request() req: any): string{   
         return req.user;
     }
 
     @UseGuards(AuthGuard('jwt-refresh'))
     @Post('refresh')
-    refreshToken(@Request() req){ 
+    refreshToken(@Request() req: any){ 
         return this.authService.refreshToken(req.user); 
     } 
-
+    
     @Post('change_pass/:token')
     changePassword(
         @Param('token') token: string,
-        @Body('email') email: string,
+        @Body('email', ParseEmailPipe) email: string,
         @Res() res: Response,
     ){
         return this.authService.changePassword(email, token, res);

@@ -1,17 +1,14 @@
 import { Body, Controller, Delete, Get, HttpException, Param, Post, Put, Query, Request, UsePipes, ValidationPipe } from "@nestjs/common";
-import { IFile } from "src/repository/repository.model";
-import { CreateFolderDto, FolderDto } from "./dtos/folder.dto";
+import { CreateFolderDto, FolderDto, MoveFolderDto, UpdateFolderDto } from "./dtos/folder.dto";
 import { FolderService } from "./folder.service";
-import { SortOrder } from "mongoose";
-
-
+import { ObjectId, SortOrder, Types } from "mongoose";
+import { ParseObjectIdPipe } from "../auth/pipes/objectId.pipe";
 
 @Controller('folder')
 export class FolderController{
     constructor(private folderService: FolderService){}
     
-    @UsePipes(new ValidationPipe())
-
+    @UsePipes(new ValidationPipe()) 
     @Get('/isDeleted')
     folderIsDeleted(
         @Request() req, 
@@ -21,12 +18,12 @@ export class FolderController{
     
     @Get('/:id')
     folderOfUser(
-        @Param('id') _id:string,
+        @Param('id', ParseObjectIdPipe) _id: ObjectId,
     ): Promise<FolderDto>{ 
         return this.folderService.folder(_id);
     }
 
-    @Get('')
+    @Get()
     foldersOfUser(
         @Request() req, 
         @Query('search') search: string,
@@ -36,12 +33,10 @@ export class FolderController{
         return this.folderService.foldersOfUser(req.user, search,type, value );
     }
     
-
-
     @Post('create')
     createFolder(
         @Body() { name, parent } : CreateFolderDto,
-        @Request() req,
+        @Request() req: any,
     ): Promise<FolderDto>{
         console.log({name,owner: req.user._id, parent});
         const owner: string = req.user._id; 
@@ -50,32 +45,31 @@ export class FolderController{
 
     @Put('update/:id')
     updateFolder(
-        @Param('id') _id: string, 
-        @Body() { name, color} 
+        @Param('id', ParseObjectIdPipe) _id: ObjectId, 
+        @Body() { name, color} : UpdateFolderDto
     ): Promise<FolderDto>{
         return this.folderService.updateFolder(_id, name, color );
     }
 
     @Put('move/:idFolder')
     moveFolder(
-        @Param('idFolder') _id: string,
-        @Body() { currentFolder, newFolder }
+        @Param('idFolder', ParseObjectIdPipe) _id: ObjectId,
+        @Body() { currentFolder, newFolder }: MoveFolderDto
     ){
         return this.folderService.moveFolder(_id, currentFolder, newFolder);
     }
 
     @Delete('delete/:id')
     deleteFolder(
-        @Param('id') _id: string,
+        @Param('id', ParseObjectIdPipe) _id: Types.ObjectId,
     ):Promise<HttpException>{
         return this.folderService.deleteFolder(_id);
     }
 
     @Post('restore/:id')
     restore(
-        @Param('id') _id: string,
-    ):Promise<HttpException>{
-        console.log(_id);
+        @Param('id', ParseObjectIdPipe) _id: Types.ObjectId,
+    ):Promise<HttpException>{ 
         return this.folderService.restoreFolder(_id);
     }
 } 

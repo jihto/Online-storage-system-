@@ -1,13 +1,12 @@
 import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
-import { RepositoryController, storage } from "./repository.controller";
+import { RepositoryController } from "./repository.controller";
 import { RepositoryService } from "./repository.service";
 import { File } from "./repository.model";
 import { User } from "src/auth/models";
 import { MulterModule } from "@nestjs/platform-express";
 import { Folder } from "src/folder/folder.model";
-
-
+import { storage } from "./storage.config";
 
 @Module({  
     imports: [

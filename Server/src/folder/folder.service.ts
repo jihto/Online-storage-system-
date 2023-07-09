@@ -7,6 +7,7 @@ import { IUser } from "src/users/users.model";
 import mongoose, { Model, ObjectId, SortOrder, Types } from "mongoose";
 import { DataSignInDto } from "src/auth/dtos/data-user.dto";
 import { DataSignUpDto } from "src/auth/dtos/data-user.dto";
+import { ParseObjectIdPipe } from "../auth/pipes/objectId.pipe";
  
 @Injectable({})
 export class FolderService{
@@ -20,7 +21,7 @@ export class FolderService{
         if(!IdFolderOfOwner)
             throw new HttpException('Id folder doessn\'t exsist in owner', HttpStatus.BAD_REQUEST);
     }  
-    private async softDeleteFolder(_id: mongoose.Types.ObjectId, type: boolean): Promise<void> {
+    private async softDeleteFolder(_id: Types.ObjectId, type: boolean): Promise<void> {
         try {
             const result = await this.folderModel.findOneAndUpdate({ _id }, { $set: { isDeleted: type } });
     
@@ -86,7 +87,7 @@ export class FolderService{
         } 
     }
 
-    async folder(_id: string): Promise<FolderDto>{
+    async folder(_id: ObjectId): Promise<FolderDto>{
         try {  
             const folder = await this.folderModel.findOne({ _id })
                 // .populate({
@@ -134,9 +135,9 @@ export class FolderService{
         }
     }
 
-    async updateFolder (_id: string, name: string, color: string){
+    async updateFolder (_id: ObjectId, name: string, color: string){
         try {
-            const updataData = { name, color};
+            const updataData = { name, color };
             //checking which fields was send/exists to save it in database
             for(const key in updataData)
                 if(!updataData[key])
@@ -151,7 +152,7 @@ export class FolderService{
         } 
     }
 
-    async moveFolder(_id: string, currentFolder: string, newFolder: string){
+    async moveFolder(_id: ObjectId, currentFolder: ObjectId, newFolder: ObjectId){
         try { 
             //Change parent of folder equal id of new Folder which it will be contain (newFolder)
             const updateParentFolder = await this.folderModel.findOneAndUpdate({ _id }, {$set:{ parent: newFolder }});
@@ -169,18 +170,18 @@ export class FolderService{
         } 
     }
 
-    async deleteFolder(_id: string):Promise<HttpException>{  
+    async deleteFolder(_id: Types.ObjectId):Promise<HttpException>{  
         try {
-            await this.softDeleteFolder(new mongoose.Types.ObjectId(_id), true);  
+            await this.softDeleteFolder(_id, true);  
             return new HttpException("Delete Succesfull", HttpStatus.OK); 
         } catch (error) {
             return new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
         }
     } 
 
-    async restoreFolder(_id: string):Promise<HttpException>{
+    async restoreFolder(_id: Types.ObjectId):Promise<HttpException>{
         try{
-            await this.softDeleteFolder(new mongoose.Types.ObjectId(_id), false);  
+            await this.softDeleteFolder(_id, false);  
             return new HttpException("Restore Successfull", HttpStatus.OK)
         }catch(error){
             console.log(error.message);

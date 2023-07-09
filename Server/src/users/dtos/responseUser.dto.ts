@@ -3,7 +3,7 @@ import { IsEmail, IsNotEmpty, IsString } from "class-validator";
 import { Types } from "mongoose";
 
 
-export class UserDto{
+export class ResponseUserDto{
     @IsNotEmpty()
     @Type(() => String)
     _id: Types.ObjectId; 
@@ -22,7 +22,7 @@ export class UserDto{
     @IsString()
     avatar: string;
 
-    constructor(partial: Partial<UserDto>){
+    constructor(partial: Partial<ResponseUserDto>){
         this._id = partial._id;
         this.email = partial.email; 
         this.roles = partial.roles;

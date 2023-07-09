@@ -38,5 +38,5 @@ export class DataSignInDto{
 }
 
 export class DataSignUpDto extends OmitType(DataSignInDto, ['accessToken', 'refreshToken', "roles"] as const) {
-
+    
 }
