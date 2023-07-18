@@ -1,7 +1,5 @@
 <p align="center">
-    <h1>Wellcome to my Read.me project Stote-File👋</h1>
-</p>
-  <p align="center">
+    <h1>Wellcome to my Read.me project Stote-File👋</h1> 
     <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
     <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
     <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
@@ -15,7 +13,10 @@
   <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
 </p>
 This is a [Store-file project](https://nextjs.org/) project build base on Typescript in both Front-end[`Next.js`](https://nextjs.org/) and Back-end [`Nest.js`](https://nestjs.com/) and Database [`Mongodb`]
+
+
 ## ✨ Demo
+
 
 ## 🚀 Usage
 
@@ -71,6 +72,13 @@ You can start editing the page by modifying `pages/index.tsx`. The page auto-upd
 The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+
+
+👤 **--Jihto--**
+
+- Twitter: [@Jihto](https://twitter.com/)
+- Github: [@Jihto](https://github.com/jihto)
+
 
 ## Learn More
 
