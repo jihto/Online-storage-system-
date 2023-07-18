@@ -6,8 +6,8 @@ import {Folder, IFolderModel } from "./folder.model";
 import { IUser } from "src/users/users.model";
 import mongoose, { Model, ObjectId, SortOrder, Types } from "mongoose";
 import { DataSignInDto } from "src/auth/dtos/data-user.dto";
-import { DataSignUpDto } from "src/auth/dtos/data-user.dto";
-import { ParseObjectIdPipe } from "../auth/pipes/objectId.pipe";
+import { DataSignUpDto } from "src/auth/dtos/data-user.dto"; 
+import { SortType } from "./types/sorting.enum";
  
 @Injectable({})
 export class FolderService{
@@ -50,10 +50,12 @@ export class FolderService{
     async foldersOfUser(
         owner: DataSignUpDto,
         search: string,
-        type: string,
+        type: SortType,
         value: SortOrder,
     ): Promise<FolderDto[]>{
         try {  
+            if(!search)
+                search = "";
             const folders = await this.folderModel.find({ 
                 owner: owner._id, 
                 parent: { $exists: false }, 
@@ -94,8 +96,8 @@ export class FolderService{
                 //     path:'files',
                 //     select: 'title description filename'
                 // })
-                // .populate('kids') 
-                // .exec();
+                // .populate('kids')   
+                .exec()
             if(!folder)
                 throw new HttpException('Id Folder didn\'t exsist', HttpStatus.BAD_REQUEST); 
             return new FolderDto(folder);

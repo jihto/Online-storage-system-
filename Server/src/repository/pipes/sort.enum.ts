@@ -1,7 +1,8 @@
 export enum SortType {
     Empty = '',
     Title = 'originalname',
-    CreateAt = 'createAt' 
+    CreateAt = 'createAt', 
+    Type = "type"
 }
 export enum SortValue{
     Empty = '',

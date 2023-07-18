@@ -4,8 +4,7 @@ import {  HydratedDocument, Model, ObjectId, SortOrder } from "mongoose";
 import { IUser } from "src/users/users.model";
 import { RepositoryDto } from "./dtos/repository.dto";
 import { IFileModel } from "./repository.model";
-import * as fs from 'fs';
-import { ParseObjectIdPipe } from "./pipes/objectId.pipe";
+import * as fs from 'fs'; 
 import { IFolderModel } from "src/folder/folder.model";
 import { SortType,SortValue } from "./pipes/sort.enum";
 
@@ -43,6 +42,8 @@ export class RepositoryService {
     ) :Promise<RepositoryDto[]>{ 
         try{
             await this.checkIdUserExists(userId); 
+            if(!search)
+                search = ""
             const searchFiles = await this.fileModel
                 .find({
                     user: userId, 
@@ -143,10 +144,14 @@ export class RepositoryService {
             //     title = `${title}(${maxTitle})`
             // } 
             for (const file of files) {
+                
+                const location: number = file.originalname.lastIndexOf('.') + 1;
+                const type: string = file.originalname.slice(location);
                 const newFile = await this.fileModel.create({
                     folder: idFolder,
                     originalname: file.originalname,
                     fileName: file.filename,
+                    type,
                     user: idUser
                 });
                 await this.folderModel.updateOne({ _id: idFolder },{ $push: {files:  newFile._id}})

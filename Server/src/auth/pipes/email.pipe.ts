@@ -12,7 +12,7 @@ interface ArgumentMetadata{
 export class ParseEmailPipe implements PipeTransform<any, string>{
     transform(value: string, metadata: ArgumentMetadata): string {
         try { 
-            const sampleRegExMail: RegExp = new RegExp('^[a-z0-9 .] \.@[a-z]{2,4}$');
+            const sampleRegExMail: RegExp = new RegExp('^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$');
             const email: string = value.toLocaleLowerCase();
             if(sampleRegExMail.test(email))
                 return email;

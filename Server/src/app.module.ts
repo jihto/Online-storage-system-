@@ -1,14 +1,14 @@
-import { ClassSerializerInterceptor, Module, ValidationPipe } from '@nestjs/common'; 
+import { ClassSerializerInterceptor, Module } from '@nestjs/common'; 
 import { AuthModule } from './auth/auth.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MiddlewareConsumer, NestModule } from "@nestjs/common/interfaces";
-import { AuthMiddleware } from './middleware/auth.middleware';
+import { AuthMiddleware } from './common/middleware/auth.middleware';
 import { RepositoryModule } from './repository/repository.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { FolderModule } from './folder/folder.module';
 import { MailModule } from './mail/mail.module';
 import { ConfigModule } from '@nestjs/config';  
-import { UsersModule } from './users/users.module';
+import { UsersModule } from './users/users.module'; 
 
 
 @Module({
@@ -30,7 +30,7 @@ import { UsersModule } from './users/users.module';
     {
       provide: APP_INTERCEPTOR,
       useClass: ClassSerializerInterceptor, 
-    }, 
+    }
   ]
 })
 export class AppModule implements NestModule

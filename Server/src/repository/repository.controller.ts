@@ -3,9 +3,9 @@ import { Delete, Param, Put, Query, Request, UploadedFiles, UseInterceptors } fr
 import { AnyFilesInterceptor } from "@nestjs/platform-express";
 import { RepositoryService } from "./repository.service"; 
 import { CreateRepositoryDto, RepositoryDto } from "./dtos/repository.dto";
-import { SortType, SortValue, Sorting } from "./pipes/sort.enum";
-import { ParseObjectIdPipe } from "./pipes/objectId.pipe";
+import { SortType, SortValue, Sorting } from "./pipes/sort.enum"; 
 import { ObjectId, SortOrder } from "mongoose";
+import { ParseObjectIdPipe } from "src/common/pipes/objectId.pipe";
 
 
 @Controller('repository')
@@ -18,29 +18,27 @@ export class RepositoryController{
         @Request() req: any,
         @Query('type', new ParseEnumPipe(SortType)) type: SortType,
         @Query('value', new ParseEnumPipe(SortValue)) value: SortOrder, 
-        @Query('search') search: string, 
+        @Query('search') search: string | undefined, 
     ): Promise<RepositoryDto[]>{
         return this.repositoryService.searchFilesOfUser(req.user._id, type, value, search);
     }
 
     @Get('isFavorited')
     favoritesFileOfUser(
-        @Request() req : any,
+        @Request() req: any,
     ): Promise<RepositoryDto[]>{
         return this.repositoryService.favoritesFileOfUser(req.user._id);
     }
 
     @Get('isDeleted')
     filesDeletedOfUser(
-        @Request() req : any,
+        @Request() req: any,
     ): Promise<RepositoryDto[]>{
         return this.repositoryService.filesDeletedOfUser(req.user._id);
     }
     
     @Get('/:id')
-    file(
-        @Param('id', ParseObjectIdPipe) _id: ObjectId
-    ): Promise<RepositoryDto>{
+    file(@Param('id', ParseObjectIdPipe) _id: ObjectId ): Promise<RepositoryDto>{
         return this.repositoryService.file(_id);
     } 
 

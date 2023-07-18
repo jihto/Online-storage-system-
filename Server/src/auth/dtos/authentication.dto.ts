@@ -8,7 +8,7 @@ export class SignInDto{
 
     @IsNotEmpty()
     @IsString()
-    @ValidateIf((o) => o.password > 8)
+    @ValidateIf((o) => o.password.length < 8)
     password: string;
 }
 

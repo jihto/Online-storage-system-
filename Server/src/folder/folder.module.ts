@@ -3,8 +3,8 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { File } from "src/repository/repository.model";
 import { FolderController } from "./folder.controller";
 import { Folder } from "./folder.model";
-import { FolderService } from "./folder.service";
-import { User } from "src/auth/models";
+import { FolderService } from "./folder.service"; 
+import { User } from "src/users/users.model";
 
 
 

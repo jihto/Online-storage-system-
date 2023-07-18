@@ -10,10 +10,7 @@ export class ResponseUserDto{
 
     @IsNotEmpty()
     @IsEmail()
-    email: string;
-
-    @Exclude()
-    roles:string;
+    email: string; 
 
     @IsNotEmpty()
     @IsString()
@@ -24,8 +21,7 @@ export class ResponseUserDto{
 
     constructor(partial: Partial<ResponseUserDto>){
         this._id = partial._id;
-        this.email = partial.email; 
-        this.roles = partial.roles;
+        this.email = partial.email;  
         this.username = partial.username; 
         this.avatar = partial.avatar;
     }

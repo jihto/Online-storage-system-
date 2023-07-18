@@ -1,8 +1,9 @@
 import { Body, Controller, Delete, Get, HttpException, Param, Post, Put, Query, Request, UsePipes, ValidationPipe } from "@nestjs/common";
 import { CreateFolderDto, FolderDto, MoveFolderDto, UpdateFolderDto } from "./dtos/folder.dto";
 import { FolderService } from "./folder.service";
-import { ObjectId, SortOrder, Types } from "mongoose";
-import { ParseObjectIdPipe } from "../auth/pipes/objectId.pipe";
+import { ObjectId, SortOrder, Types } from "mongoose"; 
+import { ParseObjectIdPipe } from "src/common/pipes/objectId.pipe";
+import { SortType } from "./types/sorting.enum";
 
 @Controller('folder')
 export class FolderController{
@@ -11,7 +12,7 @@ export class FolderController{
     @UsePipes(new ValidationPipe()) 
     @Get('/isDeleted')
     folderIsDeleted(
-        @Request() req, 
+        @Request() req: any, 
     ): Promise<FolderDto[]>{ 
         return this.folderService.folderIsDeleted(req.user);
     }
@@ -25,9 +26,9 @@ export class FolderController{
 
     @Get()
     foldersOfUser(
-        @Request() req, 
+        @Request() req: any, 
         @Query('search') search: string,
-        @Query('type') type: string,
+        @Query('type') type: SortType,
         @Query('value') value: SortOrder,
     ): Promise<FolderDto[]>{ 
         return this.folderService.foldersOfUser(req.user, search,type, value );

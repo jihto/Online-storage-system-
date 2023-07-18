@@ -7,6 +7,7 @@ const FileSchema = new mongoose.Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     fileName: { type:String, require: true }, 
     originalname: { type:String, require: true }, 
+    type: { type: String, require: true },  
     folder: { type: mongoose.Schema.Types.ObjectId, ref: "Folder"},
     isFavorite: { type: Boolean, default: false },
 }).add(BaseSchema);
@@ -20,6 +21,7 @@ export interface IFile extends Document{
     fileName: string; 
     isFavorite: boolean;
     originalname: string;
+    type: string;
     isDeleted: boolean;
     createAt: Date;
     updateAt: Date;

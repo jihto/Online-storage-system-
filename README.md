@@ -1,15 +1,37 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This is a [Store-file project](https://nextjs.org/) project build base on Typescript in both Front-end[`Next.js`](https://nextjs.org/) and Back-end [`Nest.js`](https://nestjs.com/) and Database [`Mongodb`]
 
-## Getting Started
+## To Getting Started
 
-First, run the development server:
+First, run the development client:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+1. Open terminal
+#Navigation to Client folder 
+2. cd client 
+#Install package-lock.json and library
+3. npm i
+#Run client host
+4. npm run dev
+    # or
+    yarn dev
+    # or
+    pnpm dev
+``` 
+
+Second, run the development server:
+
+```bash
+1. Open terminal
+#Navigation to Server folder 
+2. cd server 
+#Install package-lock.json and library
+3. npm i
+#Run server host
+4. npm run dev --watch
+    # or
+    yarn dev
+    # or
+    nest start --watch
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.

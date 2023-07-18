@@ -1,9 +1,11 @@
 import { Exclude, Transform, Type } from "class-transformer";
-import { IsBoolean, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsArray, IsBoolean, IsNotEmpty, IsOptional, IsString, ValidateNested } from "class-validator";
 import { ObjectId, Types } from "mongoose";
 import { IUser } from "src/users/users.model"; 
 import { IFolder } from "../folder.model";
 import { IFile } from "src/repository/repository.model"; 
+import { RepositoryDto } from "src/repository/dtos/repository.dto";
+import { KidsDto } from "./kid.dto";
 
 
 export class FolderDto {
@@ -18,7 +20,7 @@ export class FolderDto {
     parent: IFolder['_id'];
 
     @Type(() => String)
-    kids: IFolder[] | [];
+    kids!: FolderDto[] | [];
 
     @Type(() => String)
     files: IFile[] | [];

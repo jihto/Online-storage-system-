@@ -9,7 +9,7 @@ export class VerifyTokenAuthGuard extends AuthGuard('jwt'){
         return super.canActivate(context);
     }
     //custom req.user
-    handleRequest(err: any, user: any, info: any, context: ExecutionContext) {
+    handleRequest(err: Error, user: any, info: any, context: ExecutionContext) {
         //return user = false if token is invalid 
         const req = context.switchToHttp().getRequest(); 
         req.user = user;  

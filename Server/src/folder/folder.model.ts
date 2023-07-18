@@ -35,6 +35,4 @@ export interface IFolderModel extends mongoose.Model<IFolder> {
     restore(filter: object): Promise<IFolder>; 
 }
 
-
-
 export const Folder = { name:'Folder', schema: FolderSchema};

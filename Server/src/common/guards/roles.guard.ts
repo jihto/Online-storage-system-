@@ -1,8 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable, } from "@nestjs/common";
 import { Reflector } from "@nestjs/core"; 
-import { AuthMiddleware } from "../../middleware/auth.middleware";
-import { ROLES_KEYS } from "../constants";
-import { Role } from "../models/roles.enum";  
+import { AuthMiddleware } from "../middleware/auth.middleware"; 
+import { Role } from "../../auth/interfaces/roles.enum";  
 // import { VerifyTokenAuthGuard } from "./verifyToken-auth.guard";
 // import { map } from 'rxjs/operators';
 
@@ -12,7 +11,7 @@ import { Role } from "../models/roles.enum";
 export class RolesGuard implements CanActivate{ 
     constructor(private reflector: Reflector) {}
     async canActivate(context: ExecutionContext): Promise<boolean> {
-        const requiredRoles = this.reflector.getAllAndOverride<Role[]>(ROLES_KEYS, [
+        const requiredRoles = this.reflector.getAllAndOverride<Role[]>(process.env.ROLES_KEYS, [
             context.getHandler(),
             context.getClass(),
         ]);

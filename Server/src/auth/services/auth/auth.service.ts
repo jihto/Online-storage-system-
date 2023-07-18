@@ -4,14 +4,17 @@ import { Model } from 'mongoose';
 import { HttpStatus, HttpException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt'; 
 import { ForbiddenException, NotAcceptableException } from "@nestjs/common/exceptions";
-import { JwtService } from '@nestjs/jwt'; 
-import { Tokens } from "./types/token.type";
-import { IAuth } from "./models/auth.model";
-import { IUser } from "../users/users.model";
-import { DataSignInDto, DataSignUpDto } from "./dtos/data-user.dto";
+import { JwtService, JwtVerifyOptions } from '@nestjs/jwt';  
 import { MailService } from "src/mail/mail.service"; 
 import { Response } from "express";
 import { ConfigService } from '@nestjs/config';
+import { Tokens } from "src/auth/interfaces/token.interface";
+import { IUser } from "src/users/users.model";
+import { IAuth } from "src/auth/auth.model";
+import { DataSignInDto, DataSignUpDto } from "src/auth/dtos/data-user.dto";
+import { UpdatePasswordDto } from "src/auth/dtos/update-password.dto";
+import { JwtPayload } from "src/auth/interfaces/payload.interface";
+import { DecodeToken } from "src/auth/interfaces/Decode.interface";
 
 @Injectable({})
 export class AuthService { 
@@ -22,8 +25,8 @@ export class AuthService {
         private jwtService: JwtService,
     ) {} 
         
-    private config: ConfigService;
-    private opt: number;
+    private config: ConfigService = new ConfigService();
+    private otp: number;
     private async getTokenAndRefresh(payload: Object): Promise<Tokens>{
         const [accessToken, refreshToken] = await Promise.all([
             this.jwtService.signAsync(payload,{
@@ -45,7 +48,7 @@ export class AuthService {
 
     private generateOTP(){
         const number = Math.floor(Math.random()*10000);
-        this.opt = number;  
+        this.otp = number;  
         return number;
     }
 
@@ -57,9 +60,17 @@ export class AuthService {
             const isPassword = await bcrypt.compare(password, authUser.password);
             if(!isPassword)
                 throw new NotAcceptableException("Password isn't correct");
+            console.log(authUser)
             if(authUser && isPassword){
-                const user = await this.userModel.findOne({ user: authUser._id});
-                return user; 
+                const user = await this.userModel.findOne({ auth: authUser._id});
+                const dataUser: JwtPayload = {
+                    _id: user._id,
+                    username: user.username,
+                    roles: [authUser.role],
+                    email: authUser.email,
+                }
+                
+                return dataUser; 
             }
             return null;
         } catch (error) {
@@ -70,12 +81,12 @@ export class AuthService {
     async signin(user: DataSignUpDto): Promise<DataSignInDto>{   
         try {   
             const { accessToken, refreshToken } = await this.getTokenAndRefresh(user); 
-            await this.userModel.findOneAndUpdate({user: user._id}, {$set: { token: accessToken, refreshToken }}); 
+            await this.authModel.findOneAndUpdate({user: user._id}, {$set: { token: accessToken, refreshToken }}); 
             const data = {
                 ...user,
                 accessToken,
                 refreshToken,
-            }
+            } 
             return new DataSignInDto(data); 
         } catch (error) {
             throw new NotAcceptableException(error.message);
@@ -109,9 +120,10 @@ export class AuthService {
             const dataUser = {
                 _id: newUser.id, 
                 email,
-                username, 
-                roles: newUser.role, 
+                roles: newAuth.role,
+                username,  
             } 
+            console.log(dataUser)
             return new DataSignUpDto(dataUser);
         } catch (error) {
             throw new NotAcceptableException(error.message);
@@ -135,21 +147,38 @@ export class AuthService {
         } 
     } 
     
-    async changePassword(email : string, token: any, res: Response){
+    async requestChangePassword(email : string, res: Response){
         try {
             const isExists = await this.authModel.findOne({ email });
-            if(!isExists)
+            if(isExists)
                 throw new HttpException('Email wasn\'t exists', HttpStatus.BAD_REQUEST);
-            const isToken = await this.jwtService.verify(this.config.get('SECRET_KEY'), token);
-            if(!isToken)
-                throw new HttpException('Token wasn\'t exists', HttpStatus.BAD_REQUEST);
-            console.log({"otp":this.generateOTP()});
-            // await this.mailService.sendUserConfirmation(email, "tokenn");
+            await this.generateOTP(); 
+            const { accessToken, refreshToken } = await this.getTokenAndRefresh({email, otp: this.otp});
+            await this.mailService.sendUserConfirmation(email, accessToken, this.otp);
             res.status(HttpStatus.OK).send('Send email successful');
             return []; 
         } catch (error) {
             throw new NotAcceptableException(error.message);
         }
+    }
+    async updatePassword(
+        newPassword: string,  
+        token: string, 
+        otp: number,
+    ): Promise<HttpException>{
+        try{
+            const decode = await this.jwtService.decode(token) as DecodeToken; 
+            if(otp !== decode.otp)
+                throw new HttpException('Authentication fail', HttpStatus.BAD_REQUEST);
+            const hashPassword = await bcrypt.hash(newPassword, 10); 
+            if(!hashPassword)
+                throw new HttpException('Something wrong', HttpStatus.INTERNAL_SERVER_ERROR);
+            // const updatePassword = await this.authModel.findOne({ email:decode.email }, { $set: { password: hashPassword }});
+            return new HttpException('Update password successfull', HttpStatus.OK)
+        }catch(error: any){
+            throw new NotAcceptableException(error.message);
+        }
+        
     }
     
 }  
