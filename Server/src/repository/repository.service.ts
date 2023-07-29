@@ -126,7 +126,7 @@ export class RepositoryService {
         }
     } 
 
-    async createFile(files: Express.Multer.File[], idUser: string, idFolder: string ): Promise<HttpException>{
+    async createFile(files: Express.Multer.File[], idUser: ObjectId, idFolder: string ): Promise<HttpException>{
         try {
             // const isSameTitle = await this.fileModel.find({ title });
             // if(isSameTitle.length > 0){ 

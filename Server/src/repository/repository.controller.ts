@@ -6,6 +6,7 @@ import { CreateRepositoryDto, RepositoryDto } from "./dtos/repository.dto";
 import { SortType, SortValue, Sorting } from "./pipes/sort.enum"; 
 import { ObjectId, SortOrder } from "mongoose";
 import { ParseObjectIdPipe } from "src/common/pipes/objectId.pipe";
+import { UserRequest } from "src/common/interfaces/user-request.interface";
 
 
 @Controller('repository')
@@ -15,7 +16,7 @@ export class RepositoryController{
     } 
     @Get()
     searchFiles(
-        @Request() req: any,
+        @Request() req: UserRequest,
         @Query('type', new ParseEnumPipe(SortType)) type: SortType,
         @Query('value', new ParseEnumPipe(SortValue)) value: SortOrder, 
         @Query('search') search: string | undefined, 
@@ -25,14 +26,14 @@ export class RepositoryController{
 
     @Get('isFavorited')
     favoritesFileOfUser(
-        @Request() req: any,
+        @Request() req: UserRequest,
     ): Promise<RepositoryDto[]>{
         return this.repositoryService.favoritesFileOfUser(req.user._id);
     }
 
     @Get('isDeleted')
     filesDeletedOfUser(
-        @Request() req: any,
+        @Request() req: UserRequest,
     ): Promise<RepositoryDto[]>{
         return this.repositoryService.filesDeletedOfUser(req.user._id);
     }
@@ -61,7 +62,7 @@ export class RepositoryController{
     uploadFile(
         @UploadedFiles() files: Array<Express.Multer.File>,
         @Body() { idFolder } : CreateRepositoryDto ,
-        @Request() req : any
+        @Request() req : UserRequest
     ): Promise<HttpException>{   
         console.log(files);   
         return this.repositoryService.createFile(files, req.user._id, idFolder);

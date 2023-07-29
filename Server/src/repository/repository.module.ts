@@ -7,6 +7,8 @@ import { MulterModule } from "@nestjs/platform-express";
 import { Folder } from "src/folder/folder.model";
 import { storage } from "./storage.config";
 import { User } from "src/users/users.model";
+import { TimeOutInterceptor } from "src/common/interceptors/timeout.interceptor";
+import { APP_INTERCEPTOR } from "@nestjs/core";
 
 @Module({  
     imports: [
@@ -19,7 +21,9 @@ import { User } from "src/users/users.model";
         })
     ],
     controllers: [RepositoryController],
-    providers: [RepositoryService]
+    providers: [
+        RepositoryService,
+    ]
 })
 
 

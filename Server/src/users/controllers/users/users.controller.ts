@@ -1,6 +1,7 @@
 import { Body, Controller, FileTypeValidator, Get, HttpException, ParseFilePipe, Put, Request, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import multer from 'multer';
+
+import { UserRequest } from 'src/common/interfaces/user-request.interface';
 import { InformationUser } from 'src/users/dtos/informationUser.dto';
 import { UsersService } from 'src/users/services/users/users.service';
 
@@ -8,8 +9,10 @@ import { UsersService } from 'src/users/services/users/users.service';
 export class UsersController {
     constructor(private usersService: UsersService){}
     @Get()
-    informationUser(@Request() request):Promise<InformationUser> { 
-        return this.usersService.informationUser(request.user);
+    informationUser(
+        @Request() request: UserRequest
+    ):Promise<InformationUser> {  
+        return this.usersService.informationUser(request.user._id);
     }
 
     @Put('updateAvatar') 
@@ -31,7 +34,7 @@ export class UsersController {
     @Put('updateInformation')
     updateInformationUser( 
         @Body('username') username: string,
-        @Request() request,
+        @Request() request: any,
     ): Promise<HttpException>{ 
         return this.usersService.updateInformationUser(request.user._id, username);
     }

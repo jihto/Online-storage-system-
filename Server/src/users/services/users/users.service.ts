@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable, NotAcceptableException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 import { IFolderModel } from 'src/folder/folder.model';
 import { IFileModel } from 'src/repository/repository.model';
 import { InformationUser } from 'src/users/dtos/informationUser.dto';
@@ -14,16 +14,16 @@ export class UsersService {
         @InjectModel('User') private readonly userModel: Model<IUser>,
         @InjectModel('Folder') private readonly folderModel: IFolderModel, 
     ){}
-    async informationUser(user: ResponseUserDto): Promise<InformationUser>{
+    async informationUser(_id: ObjectId): Promise<InformationUser>{
         try{
             const userQuery = await this.userModel
-                .findOne({ _id:user._id })
+                .findOne({ _id })
                 .populate({path: 'auth', select:'-_id email'})
                 .select('username role avatar _id auth createAt updateAt')
                 .lean()
                 .exec();
-            const countFileQuery = this.fileModel.countDocuments({user: user._id});
-            const countFolderQuery = this.folderModel.countDocuments({owner: user._id});
+            const countFileQuery = this.fileModel.countDocuments({user: _id});
+            const countFolderQuery = this.folderModel.countDocuments({owner: _id});
             const [userInfo, files, folders] = await Promise.all([userQuery, countFileQuery, countFolderQuery]);
 
             return new InformationUser({...userInfo, files: files, folders: folders});

@@ -16,7 +16,7 @@ export class FolderService{
         @InjectModel('File') private readonly fileModel: IFileModel,
         @InjectModel('User') private readonly userModel: Model<IUser>,
     ){}  
-    private async checkIdFolderOfUser(_id: string, parent: string){
+    private async checkIdFolderOfUser(_id: ObjectId, parent: string){
         const IdFolderOfOwner = await this.userModel.findOne({ _id, folders: {$in: [parent]}});
         if(!IdFolderOfOwner)
             throw new HttpException('Id folder doessn\'t exsist in owner', HttpStatus.BAD_REQUEST);
@@ -48,7 +48,7 @@ export class FolderService{
         }
     } 
     async foldersOfUser(
-        owner: DataSignUpDto,
+        _id: ObjectId,
         search: string,
         type: SortType,
         value: SortOrder,
@@ -57,7 +57,7 @@ export class FolderService{
             if(!search)
                 search = "";
             const folders = await this.folderModel.find({ 
-                owner: owner._id, 
+                owner: _id, 
                 parent: { $exists: false }, 
                 isDeleted: false,
                 name: {
@@ -74,10 +74,10 @@ export class FolderService{
         } 
     }
     
-    async folderIsDeleted(owner: DataSignUpDto): Promise<FolderDto[]> {
+    async folderIsDeleted(_id: ObjectId): Promise<FolderDto[]> {
         try {
             const foldersIsDeleted = await this.folderModel.find({
-                owner: owner._id, 
+                owner: _id, 
                 parent: { $exists: false }, 
                 isDeleted: true
             }).exec();
@@ -105,7 +105,7 @@ export class FolderService{
             throw new NotAcceptableException(error.message);
         } 
     }
-    async createFolder(name: string , owner: string, parent: string | undefined): Promise<FolderDto>{
+    async createFolder(name: string , owner: ObjectId, parent: string | undefined): Promise<FolderDto>{
         try {  
             //Create new Folder with name and owner
             const newFolder = await this.folderModel.create({ name, owner, parent }); 

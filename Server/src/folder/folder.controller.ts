@@ -4,6 +4,7 @@ import { FolderService } from "./folder.service";
 import { ObjectId, SortOrder, Types } from "mongoose"; 
 import { ParseObjectIdPipe } from "src/common/pipes/objectId.pipe";
 import { SortType } from "./types/sorting.enum";
+import { UserRequest } from "src/common/interfaces/user-request.interface";
 
 @Controller('folder')
 export class FolderController{
@@ -12,9 +13,9 @@ export class FolderController{
     @UsePipes(new ValidationPipe()) 
     @Get('/isDeleted')
     folderIsDeleted(
-        @Request() req: any, 
+        @Request() req: UserRequest, 
     ): Promise<FolderDto[]>{ 
-        return this.folderService.folderIsDeleted(req.user);
+        return this.folderService.folderIsDeleted(req.user._id);
     }
     
     @Get('/:id')
@@ -26,21 +27,21 @@ export class FolderController{
 
     @Get()
     foldersOfUser(
-        @Request() req: any, 
+        @Request() req: UserRequest, 
         @Query('search') search: string,
         @Query('type') type: SortType,
         @Query('value') value: SortOrder,
     ): Promise<FolderDto[]>{ 
-        return this.folderService.foldersOfUser(req.user, search,type, value );
+        return this.folderService.foldersOfUser(req.user._id, search,type, value );
     }
     
     @Post('create')
     createFolder(
         @Body() { name, parent } : CreateFolderDto,
-        @Request() req: any,
+        @Request() req: UserRequest,
     ): Promise<FolderDto>{
         console.log({name,owner: req.user._id, parent});
-        const owner: string = req.user._id; 
+        const owner: ObjectId = req.user._id; 
         return this.folderService.createFolder(name, owner, parent);
     }
 

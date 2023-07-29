@@ -32,5 +32,4 @@ export class InformationUser{
     constructor(partial: Partial<InformationUser>){ 
         Object.assign(this, partial);
     }
-}
- 
+} 

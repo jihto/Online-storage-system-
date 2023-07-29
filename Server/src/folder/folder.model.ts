@@ -14,8 +14,7 @@ const FolderSchema = new mongoose.Schema({
     owner: { type:mongoose.Schema.Types.ObjectId, ref: "User", require: true }
 }).add(BaseSchema); // extend fields isDelete, createAt and updateAt of BaseSchema
 
-FolderSchema.plugin(softErase);
- 
+FolderSchema.plugin(softErase); 
 
 export interface IFolder extends Document{
     _id: Types.ObjectId;

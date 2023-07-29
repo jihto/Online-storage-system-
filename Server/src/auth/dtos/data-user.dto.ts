@@ -4,7 +4,6 @@ import { IsEmail, IsNotEmpty, IsString } from "class-validator";
 import { Types } from "mongoose";
 
 export class DataSignInDto{
-    @IsNotEmpty()
     @Type(() => String)
     _id: Types.ObjectId; 
 
@@ -15,7 +14,6 @@ export class DataSignInDto{
     @Exclude()
     roles:string;
 
-    @IsNotEmpty()
     @IsString()
     username: string;
 
@@ -38,5 +36,5 @@ export class DataSignInDto{
 }
 
 export class DataSignUpDto extends OmitType(DataSignInDto, ['accessToken', 'refreshToken', "roles"] as const) {
-    
+    password?: string;
 }
