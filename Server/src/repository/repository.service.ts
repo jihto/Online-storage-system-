@@ -33,6 +33,24 @@ export class RepositoryService {
         if(!data)
             throw new NotAcceptableException(errorMessage);
     }
+    private async splitName(originalname: string){ 
+        const location: number = originalname.lastIndexOf('.') + 1;
+        const type: string = originalname.slice(location);
+        const isSameName = await this.fileModel.exists({ originalname });
+        if(isSameName){ 
+            const name: string = originalname.slice(0, location - 1);
+            const maxNumber = await this.fileModel.countDocuments({ originalname }); 
+            return {
+                type,
+                originalname: `${name}(${maxNumber}).${type}`
+            } 
+        }
+        return {
+            type,
+            originalname
+        }
+    }
+
 
     async searchFilesOfUser(
         userId: ObjectId, 
@@ -127,29 +145,13 @@ export class RepositoryService {
     } 
 
     async createFile(files: Express.Multer.File[], idUser: ObjectId, idFolder: string ): Promise<HttpException>{
-        try {
-            // const isSameTitle = await this.fileModel.find({ title });
-            // if(isSameTitle.length > 0){ 
-            //     // find max number of same title 
-            //     const maxTitle = await this.fileModel.aggregate([
-            //         { $match: { title: { $regex: /^title\(\d+\)$/i}}},
-            //         { $group: { 
-            //             _id: idUser,  
-            //             maxTitle: {
-            //                 $max: { $regexFind: { input: "$title", regex: /\d+/ }},
-            //             }
-            //         }}
-            //     ]); 
-            //     const maxnumber = 1 + maxTitle[0].maxTitle.match | 0;
-            //     title = `${title}(${maxTitle})`
-            // } 
-            for (const file of files) {
-                
-                const location: number = file.originalname.lastIndexOf('.') + 1;
-                const type: string = file.originalname.slice(location);
+        try {  
+            for (const file of files) { 
+                const { type, originalname } = await this.splitName(file.originalname);
+                console.log({type, originalname, old: file.originalname});
                 const newFile = await this.fileModel.create({
                     folder: idFolder,
-                    originalname: file.originalname,
+                    originalname: originalname,
                     fileName: file.filename,
                     type,
                     user: idUser

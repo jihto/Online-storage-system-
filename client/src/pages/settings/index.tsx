@@ -5,18 +5,15 @@ import UserSettings from '@/components/UserSettings';
 import Container from '@/components/Container';
 import Layout from '@/Layout';
 import NestedLayout from '@/components/NestedLayout';
-import ConfirmModal from '@/components/modals/ConfirmModal';
 import Image from 'next/image';
-
-import defautAvatar from '/public/images/avatar.png';
 import Button from '@/components/buttons/Button';
 import Input from '@/components/inputs/Input';
-import { FieldValue, FieldValues, useForm } from 'react-hook-form';
+import { FieldValues, useForm } from 'react-hook-form';
 import { NextRouter, useRouter } from 'next/router';
 import { getCurrentUser } from '@/actions/getDataUser';
 import { toast } from 'react-hot-toast';
 import { updateAvatarUser } from '@/actions/user';
-import dateFormat from 'dateformat';
+import dateFormat from 'dateformat'; 
 
 
 const settings: NextPageWithLayout = () => { 
@@ -29,11 +26,7 @@ const settings: NextPageWithLayout = () => {
             username: currentUser?.username
         }
     }); 
-    useEffect(()=>{ 
-        getCurrentUser()
-            .then(data => setCurrentUser(data))
-            .catch(error => router.replace('/auth'));
-    },[]);  
+    console.log(currentUser)
     const handleUploadAvatar = async() => {
         try {
             if(avatar){
@@ -65,16 +58,23 @@ const settings: NextPageWithLayout = () => {
                 toast.error("You need to provide image")
         }
     } 
+    useEffect(()=>{ 
+        getCurrentUser()
+            .then(data => setCurrentUser(data))
+            .catch(error => router.replace('/auth'));
+    },[]);  
     return (
             <div className='grid grid-cols-2 justify-between'>
             <div className='items-center grid gap-5 justify-center'>
-                <Image 
-                    src={url ? url : `http://127.0.0.1:3333/uploads/avatars/${currentUser?.avatar}`} 
-                    width={300} 
-                    height={300} 
-                    alt={'avatar'}
-                    className='rounded-xl shadow-md w-full max-h-[500px] object-cover'
-                />
+                { 
+                    <Image 
+                        src={url ? url : `http://127.0.0.1:3333/uploads/avatars/${currentUser?.avatar}`} 
+                        width={300} 
+                        height={300} 
+                        alt={'avatar'}
+                        className='rounded-xl shadow-md w-full max-h-[500px] object-cover'
+                    /> 
+                }
                 {
                     url 
                         ? <Button type='button' label="Change" onClick={handleUploadAvatar}/>
@@ -84,12 +84,11 @@ const settings: NextPageWithLayout = () => {
             </div>
             <Container> 
                 <div className='grid gap-5 items-center w-full'>
-                    <p className='text-gray-500 text-xl'>Information user: </p> 
-                        <Input type='text' id="username" label='Name...' register={register} errors={errors} />
+                    <p className='text-gray-500 text-xl'>Information user: {currentUser?.username}</p>  
                     <p>Email: {currentUser?.auth?.email}</p> 
                     <p>Create at day: {dateFormat(currentUser?.createAt, "mmmm dS, yyyy")}</p>
                     <p>Last update at: {dateFormat(currentUser?.updateAt, "mmmm dS, yyyy")}</p> 
-                    <Button type='button' label="Change" onClick={()=>{}}/>
+                     
                 </div>
             </Container>
         </div>

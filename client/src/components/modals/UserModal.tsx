@@ -34,7 +34,7 @@ const UserModal: React.FC<UserModalProps> = ({currentUser}) => {
     }
     const title = (
         <div className='flex items-center gap-3'>
-            <Avatar src={`http://127.0.0.1:3333/uploads/avatars/${currentUser.avatar}`}/>
+            <Avatar src={currentUser.avatar && `http://127.0.0.1:3333/uploads/avatars/${currentUser.avatar}`}/>
             <p>{currentUser?.username}</p>
         </div>
     ) 

@@ -9,7 +9,7 @@ import api from '@/helpers/api';
 import useSetBreadCrumb from '@/hooks/useSetBreadCrumb';
 import { toast, Toaster } from 'react-hot-toast';
 import { createFolder, getFolder } from '@/helpers/helper'; 
-import { useRouter } from 'next/router';
+import { NextRouter, useRouter } from 'next/router';
 
 interface NewFolderModalProps{
 
@@ -23,7 +23,7 @@ interface FormProps{
 const NewFolderModal: React.FC<NewFolderModalProps> = () => {
     const newFolder = useNewFolderModal(); 
     const breadCrumb = useSetBreadCrumb();
-    const router = useRouter();
+    const router: NextRouter = useRouter();
     const { register,handleSubmit, watch, formState: { errors } } = useForm<FieldValues>({ 
         defaultValues: {
             name:newFolder.data.name

@@ -1,7 +1,7 @@
 'use client';
 
 import type { NextPageWithLayout } from './_app'
-import { ContextType, ReactElement, useCallback, useEffect, useState } from 'react'
+import { ReactElement, useCallback, useEffect, useState } from 'react'
 import NestedLayout from '../components/NestedLayout' 
 import Layout from '@/Layout';
 import Folders from '@/components/folders/Folders'; 
@@ -18,8 +18,7 @@ import useSetBreadCrumb from '@/hooks/useSetBreadCrumb';
 import useShowFullModal from '@/hooks/useShowFullModal';
 import dateFormat from 'dateformat';
 import FileDisplay from '@/components/files/FileDisplay';
-import { TypeFile } from '@/components/files/File';
-import { useSession } from 'next-auth/react';
+import { TypeFile } from '@/components/files/File'; 
 export interface UserProps {
   folders: Array<Object>; 
 }
@@ -33,9 +32,6 @@ const Page: NextPageWithLayout<UserProps> = () => {
   const [search, setSearch] = useState<string>('');
   const uploadModel = useUploadModel();
   const breadCrumb  = useSetBreadCrumb();
-
-  const { data: session } = useSession()
-  console.log(session);
 
   const fetchFolders = async(search: string = '') => {
     const response = await getFolders(search);

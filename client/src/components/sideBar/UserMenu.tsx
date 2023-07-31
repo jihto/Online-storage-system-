@@ -9,8 +9,7 @@ import useUserModel from '@/hooks/useUserModel';
 import Cookies from 'js-cookie';
 import { NextRouter, useRouter } from 'next/router'; 
 import useSetBreadCrumb from '@/hooks/useSetBreadCrumb';
-import { CurrentUser } from '@/type/user';
-import { GiFalconMoon } from 'react-icons/gi';
+import { CurrentUser } from '@/type/user'; 
 import Heading from '../Heading';
 
 interface UserMenuProps{
@@ -39,10 +38,13 @@ const UserMenu:React.FC<UserMenuProps> = ({ currentUser }) => {
                     locationIcon='right'
                     label={
                         <div className='flex justify-between items-center gap-1'> 
+                        {
                             <Avatar 
                                 size='large'
-                                src={`http://127.0.0.1:3333/uploads/avatars/${currentUser?.avatar}`}
+                                src={currentUser.avatar ? `http://127.0.0.1:3333/uploads/avatars/${currentUser?.avatar} ` : null}
                             /> 
+                            
+                        }
                             <Heading center={false} size='small' title={currentUser?.username} subTitle={currentUser?.auth?.email}/>
                         </div>
                     }  

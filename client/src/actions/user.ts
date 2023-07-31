@@ -4,7 +4,7 @@ import api,{ get } from "@/helpers/api";
 export const updateAvatarUser = async(formData: FormData) =>{ 
     const token = Cookies.get('token');
     try { 
-        const response = await api.put('/user/updateAvatar', formData
+        const response = await api.put('/users/updateAvatar', formData
 ,            {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -21,7 +21,7 @@ export const updateAvatarUser = async(formData: FormData) =>{
 export const updateInformationOfUser = async(formData: FormData) => {
     const token = Cookies.get('token');
     try { 
-        const response = await api.put('/user/updateInformation', formData
+        const response = await api.put('/users/updateInformation', formData
 ,            {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -43,7 +43,7 @@ export const getCurrentUser = async() => {
                 'Authorization': `Bearer ${token}`,  
             },
         }; 
-        const response = await api.get('/user',requestOptions);  
+        const response = await api.get('/users',requestOptions);  
         return response.data; 
     }catch(error: any){
         console.log(error.message);

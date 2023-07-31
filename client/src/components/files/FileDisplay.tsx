@@ -46,12 +46,14 @@ const FileDisplay:React.FC<FileDisplayProps> = ({ file }) => {
         return (
             <div>
                 {fileContent 
-                    ? (<div className='shadow-lg rounded-l p-1 max-w-full max-h-[150px]'>
-                            <img alt={file.name}
+                    ? (<div className='rounded-l p-1 max-w-full max-h-[150px]'>
+                            <Image alt={file.name}
                                 src={isBlob(file) ? fileContent : `http://localhost:3333/uploads/images/${fileContent}`} 
-                                className='bg-white rounded-lg object-cover w-auto h-[120px]'
+                                // className='bg-white rounded-lg object-cover w-auto h-[120px]'
+                                width={300}
+                                height={150}
                             />  
-                <p className='text-sm text-gray-600 whitespace-nowrap break-words overflow-hidden'>{file.name}</p>
+                            <p className='text-sm text-gray-600 whitespace-nowrap break-words overflow-hidden'>{file.name}</p>
                         </div>)
                     : ( <p>No file image content to display</p> )
                 }

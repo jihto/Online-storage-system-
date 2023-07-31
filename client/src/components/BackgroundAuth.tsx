@@ -50,7 +50,7 @@ const LogupAnother: React.ForwardRefRenderFunction<unknown, IconProps> = ({
     }))   
     return (
         <>  
-            <div className='relative w-full h-[25%] lg:h-1/3'>  
+            <div className='relative w-full h-5/6 lg:h-1/3'>  
                 <div className='absolute z-10 w-1/2 text-7xl animate-moving top-16'>
                     <BsFillCloudsFill/>
                 </div>

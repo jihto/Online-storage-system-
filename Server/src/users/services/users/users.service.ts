@@ -48,7 +48,7 @@ export class UsersService {
         } 
     }
     async updateInformationUser(
-        _id: string, 
+        _id: ObjectId, 
         username: string,
     ): Promise<HttpException>{ 
         try { 

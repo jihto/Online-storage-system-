@@ -9,7 +9,7 @@ export const getCurrentUser = async() => {
                 'Authorization': `Bearer ${token}`,  
             },
         }; 
-        const response = await api.get('/user',requestOptions);  
+        const response = await api.get('/users',requestOptions);  
         return response.data; 
     }catch(error: any){
         console.log(error.message);

@@ -20,9 +20,7 @@ interface UserSettingsProps{
     children: ReactElement;
 } 
 
-const UserSettings:React.FC<UserSettingsProps> = ({children}) => {
-    const newFolder = useNewFolderModal();
-    const showUser = useUserModel(); 
+const UserSettings:React.FC<UserSettingsProps> = ({children}) => { 
     return ( 
         <div className='grid justify-between gap-5 grid-cols-[3fr,1fr] w-full p-5'>
             <ConfirmModal 
@@ -38,11 +36,7 @@ const UserSettings:React.FC<UserSettingsProps> = ({children}) => {
                     <p className='text-gray-500 text-sm'>Date Log up</p>
                 </div>
             </div>
-            <div className='flex gap-2 justify-end'>
-                {/* <ButtonRound onClick={handleChangeName} icon={FaPen}/>
-                <ButtonRound onClick={() => {}} icon={MdDelete}/>
-                <ButtonRound onClick={showUser.onOpen} icon={FaUserAlt}/>
-                <ButtonRound onClick={() => {}} icon={BsThreeDots}/>  */}
+            <div className='flex gap-2 justify-end'> 
             </div> 
             <p className='text-5xl font-bold mb-14'>Settings</p>  
             <div></div>

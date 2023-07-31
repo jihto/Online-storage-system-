@@ -114,7 +114,7 @@ export class FolderService{
                 .findOneAndUpdate(
                     { _id: owner}, 
                     { $push: { folders: newFolder._id }}
-                ); 
+                );
 
             if(!updateFolderOfUser || !newFolder)
                 throw new HttpException('Id owner didn\'t exsist', HttpStatus.BAD_REQUEST);

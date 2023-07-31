@@ -34,7 +34,7 @@ export class UsersController {
     @Put('updateInformation')
     updateInformationUser( 
         @Body('username') username: string,
-        @Request() request: any,
+        @Request() request: UserRequest,
     ): Promise<HttpException>{ 
         return this.usersService.updateInformationUser(request.user._id, username);
     }

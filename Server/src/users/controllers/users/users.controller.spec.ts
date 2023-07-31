@@ -22,7 +22,7 @@ describe('UsersController', () => {
         it('should return a Information User object', async () => {
         const userRequest = {
             user: { 
-                _id: new mongoose.Types.ObjectId('64b62f84164dc54f85dc3521'),
+                _id: new mongoose.Schema.Types.ObjectId('64b62f84164dc54f85dc3521'),
                 email: "huyphuc13@gmail.com",
                 avatar:"", 
                 username: "Huy", 

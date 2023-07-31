@@ -18,7 +18,9 @@ import { TimeOutInterceptor } from './common/interceptors/timeout.interceptor';
     UsersModule,
     FolderModule,
     RepositoryModule,
-    MongooseModule.forRoot( 
+    MongooseModule.forRoot(
+      // 'mongodb+srv://pnjihto:5HeAhD27BghPUAh2@cluster0.swes1vh.mongodb.net/chat-app?retryWrites=true&w=majority'
+      'mongodb://127.0.0.1:27017/chat-app'
     ),
     MailModule,
     ConfigModule.forRoot({

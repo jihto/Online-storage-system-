@@ -67,7 +67,7 @@ const SideBar: React.FC<SideBarProps> = ({ isMain = true, outline = true, listMe
                                             label={list.name} 
                                             icon={list.icon}  
                                             onClick={()=>router.push(list.url)} 
-                                            isChoose={isMain ? window.location.pathname === list.url : false}
+                                            // isChoose={isMain ? window.location.pathname === list.url : false}
                                         />
                                         :null
                                 }
@@ -76,8 +76,8 @@ const SideBar: React.FC<SideBarProps> = ({ isMain = true, outline = true, listMe
                     </div>
                 ))}  
             </Container>
-            <footer className='mt-32 mb-16'>
-                { isMain  && <UserMenu currentUser={currentUser}/> }   
+            <footer className='mt-32 mb-16 ml-0'>
+                { isMain && currentUser  && <UserMenu currentUser={currentUser}/> }   
             </footer>
         </aside> 
     )
