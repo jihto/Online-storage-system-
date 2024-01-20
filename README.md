@@ -12,10 +12,7 @@
   </a>
   <a href="https://github.com/frinyvonnick/gitmoji-changelog">
     <img src="https://img.shields.io/badge/changelog-gitmoji-brightgreen.svg" alt="gitmoji-changelog">
-  </a>
-  <a href="https://twitter.com/FranckAbgrall">
-    <img alt="Twitter: FranckAbgrall" src="https://img.shields.io/twitter/follow/FranckAbgrall.svg?style=social" target="_blank" />
-  </a>
+  </a> 
 </p>
 This is a [Store-file project](https://nextjs.org/) project build base on Typescript in both Front-end[`Next.js`](https://nextjs.org/) and Back-end [`Nest.js`](https://nestjs.com/) and Database [`Mongodb`]
  
