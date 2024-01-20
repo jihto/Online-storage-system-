@@ -65,6 +65,5 @@ Run test on Server side with Jest.js has build with Nest.js Project:
 - Twitter: [@Jihto](https://twitter.com/)
 - Github: [@Jihto](https://github.com/jihto)
  ---
-
-_This README❤️ was made by [Store-file](https://github.com/jihto/store-file)_
+ 
 
