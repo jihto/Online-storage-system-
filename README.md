@@ -1,4 +1,4 @@
-<h1 align="center">Welcome to readme store-file project 👋</h1>
+<h1 align="center">Welcome to readme online storage system project 👋</h1>
 <p align="center">
   <img src="https://img.shields.io/npm/v/readme-md-generator.svg?orange=blue" />
   <a href="https://www.npmjs.com/package/readme-md-generator">
@@ -62,7 +62,7 @@ Run test on Server side with Jest.js has build with Nest.js Project:
 ## Author
 👤 **--Jihto--**
 
-- Twitter: [@Jihto](https://twitter.com/)
+- Linked In: [@Huy Phúc](https://www.linkedin.com/in/phuc-nguyen-9ba849266/)
 - Github: [@Jihto](https://github.com/jihto)
  ---
  
