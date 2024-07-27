@@ -8,7 +8,7 @@
     <img src="https://codecov.io/gh/kefranabg/readme-md-generator/branch/master/graph/badge.svg" />
   </a> 
 </p>
-This is a Store-file project project build base on Typescript in both Front-end  [@Huy Phúc](https://www.linkedin.com/in/phuc-nguyen-9ba849266/) [@Next.js](https://nextjs.org/) and Back-end [@Nest.js](https://nestjs.com/) and Database [@Mongodb]
+This is a Store-file project project build base on Typescript in both Front-end (NextJS) and Back-end (NestJS) and Database (Mongodb)
  
 
 ## 🍀 User interface 
