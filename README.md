@@ -13,9 +13,9 @@ This is a [Store-file project](https://nextjs.org/) project build base on Typesc
 
 ## 🍀 User interface 
 
-https://github.com/user-attachments/assets/0ac5a48c-8d16-4fb5-bec9-c88ef4970b0a
-https://github.com/user-attachments/assets/cc6315d4-9f41-4470-bb08-f342c572d6b7
-https://github.com/user-attachments/assets/2893655c-7cf8-4a2c-ae87-7a9d89274560
+![Screenshot 2023-05-26 053835](https://github.com/user-attachments/assets/0ac5a48c-8d16-4fb5-bec9-c88ef4970b0a)
+![Screenshot 2023-05-26 055053](https://github.com/user-attachments/assets/cc6315d4-9f41-4470-bb08-f342c572d6b7)
+![Screenshot 2023-05-26 054755](https://github.com/user-attachments/assets/2893655c-7cf8-4a2c-ae87-7a9d89274560)
 
 ## 🚀 To Getting Started
 
